@@ -1,0 +1,65 @@
+doctype html
+html
+  head
+    title= `${title} | ${h.siteName}`
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous")
+    link(rel='stylesheet', href='/dist/style.css')
+    link(rel="shortcut icon" type="image/png" href="/images/icons/doughnut.png")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+  body
+    block header
+      .topHeader Masma-Property
+      
+      header.top
+        nav.navbar.navbar-toggleable-md.navbar-light
+          button.navbar-toggler.navbar-toggler-right(type="button", data-toggle="collapse", data-target="#navbarSupportedContent", aria-controls="navbarSupportedContent", aria-expanded="false", aria-label="Toggle navigation")
+            span.navbar-toggler-icon
+          a.navbar-brand(href="#">Navbar)
+          .collapse.navbar-collapse#navbarSupportedContent
+            ul.navbar-nav.mr-auto
+              li.nav-item.active
+                a.nav-link(href="#") Home 
+                span.sr-only current
+              li.nav-item
+                a.nav-link(href="#") Link
+              li.nav-item
+                a.nav-link(href="#") Link
+              li.nav-item
+                a.nav-link(href="#") Link
+              li.nav-item
+                a.nav-link.disabled(href="#") Disabled
+            form.form-inline.my-2.my-lg-0
+            .nav__section.nav__section--search
+              .search
+                input.search__input(type="text" placeholder="Which Apartment..." name="search")
+                .search__results
+              //- input.form-control.mr-sm-2(type="text" placeholder="Search")
+              //- button.btn.btn-outline-success.my-2.my-sm-0(type="submit") Search
+            li.nav-item
+              a.nav-link(href="#") Link
+            .nav-item.dropdown
+              a.nav-link.dropdown-toggle#navbarDropdownMenuLink(href="http://example.com")(data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Drop Down
+              .dropdown-menu(aria-labelledby="navbarDropdownMenuLink")
+                a.dropdown-item(href="#") Action
+                a.dropdown-item(href="#") Another action
+                a.dropdown-item(href="#") Something else here
+
+    block messages
+      if locals.flashes
+        .inner
+          .flash-messages
+            - const categories = Object.keys(locals.flashes)
+            each category in categories
+              each message in flashes[category]
+                .flash(class=`flash--${category}`)
+                  p.flash__text!= message
+                  button.flash__remove(onClick="this.parentElement.remove()") &times;
+    .content
+      block content
+
+    block scripts
+      script(src=`https://maps.googleapis.com/maps/api/js?key=${process.env.MAP_KEY}&libraries=places`)
+      script(src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous")
+      script(src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous")
+      script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous")
+      script(src="/dist/App.bundle.js")
