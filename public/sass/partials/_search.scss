@@ -2,6 +2,7 @@
   position: relative;
   width: 100%;
   display: flex;
+  color: #77b800;
   &__results {
     background: white;
     position: absolute;
@@ -14,7 +15,7 @@
   &__input {
     font-size: 20px;
     background: none;
-    color: white;
+    color: #77b800;
     outline: 0;
     border: 0;
   }
@@ -26,4 +27,20 @@
       background: #f1f1f1;
     }
   }
+}
+input::-webkit-input-placeholder {
+color: #77b800 !important;
+font-size: 18px !important;
+}
+
+input:-moz-placeholder { /* Firefox 18- */
+color: #77b800 !important;
+}
+
+input::-moz-placeholder {  /* Firefox 19+ */
+color: #77b800 !important;
+}
+
+input:-ms-input-placeholder {
+color: #77b800 !important;
 }

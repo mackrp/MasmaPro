@@ -8,7 +8,7 @@ html
     meta(name="viewport" content="width=device-width, initial-scale=1")
   body
     block header
-      .topHeader Masma-Property
+      //- .topHeader Masma-Property
       
       header.top
         nav.navbar.navbar-toggleable-md.navbar-light
@@ -17,33 +17,41 @@ html
           a.navbar-brand(href="#">Navbar)
           .collapse.navbar-collapse#navbarSupportedContent
             ul.navbar-nav.mr-auto
-              li.nav-item.active
-                a.nav-link(href="#") Home 
+              li.nav__item: nav-item.active
+                a.nav-link.nav__link(href="#")
                 span.sr-only current
-              li.nav-item
-                a.nav-link(href="#") Link
-              li.nav-item
-                a.nav-link(href="#") Link
-              li.nav-item
-                a.nav-link(href="#") Link
-              li.nav-item
-                a.nav-link.disabled(href="#") Disabled
-            form.form-inline.my-2.my-lg-0
+                each item in h.menu
+                  li.nav__item
+                    a.nav__link(href=item.slug, class=(currentPath.startsWith(item.slug) ? 'nav__link--active' : ''))
+                      != h.icon(item.icon)
+                      span #{item.title}
+                //- li.nav__item: a.nav__link(href="/listings", class=(currentPath.startsWith('/listings') ? 'nav__link--active' : '')) Sale/Rent
+                //- li.nav__item: a.nav__link(href="/add", class=(currentPath.startsWith('/add') ? 'nav__link--active' : '')) Add a Listing
+                
+              //- li.nav-item
+              //-   a.nav-link(href="#") Link
+              //- li.nav-item
+              //-   a.nav-link.disabled(href="#") Disabled
+            //- form.form-inline.my-2.my-lg-0
             .nav__section.nav__section--search
               .search
-                input.search__input(type="text" placeholder="Which Apartment..." name="search")
+                input.search__input(type="text" placeholder="   Which Apartment..." name="search")
                 .search__results
               //- input.form-control.mr-sm-2(type="text" placeholder="Search")
               //- button.btn.btn-outline-success.my-2.my-sm-0(type="submit") Search
-            li.nav-item
-              a.nav-link(href="#") Link
-            .nav-item.dropdown
-              a.nav-link.dropdown-toggle#navbarDropdownMenuLink(href="http://example.com")(data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Drop Down
-              .dropdown-menu(aria-labelledby="navbarDropdownMenuLink")
-                a.dropdown-item(href="#") Action
-                a.dropdown-item(href="#") Another action
-                a.dropdown-item(href="#") Something else here
+              li.nav__item.nav__link.nav-item.dropdown
+                .nav-link.dropdown-toggle#navbarDropdownMenuLink(href="example.com", class=(currentPath.startsWith('#') ? 'nav__link--active' : ''), data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Drop-Down
+                .dropdown-menu(aria-labelledby="navbarDropdownMenuLink")
+                  a.dropdown-item(href="#") Action
+                  a.dropdown-item(href="#") Another action
+                  a.dropdown-item(href="#") Something else here
+              li.nav__item: a.nav__link(href="/register", class=(currentPath.startsWith('/register') ? 'nav__link--active' : '')) Register
+              li.nav__item: a.nav__link(href="/login", class=(currentPath.startsWith('/login') ? 'nav__link--active' : '')) LogIn
+              //- li.nav__item: a.nav__link
+              //- li.nav__item: .nav__link
+              
 
+                
     block messages
       if locals.flashes
         .inner
