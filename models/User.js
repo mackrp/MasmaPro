@@ -37,7 +37,19 @@ const userSchema = new Schema({
   phone: {
     type: String
   },
-  picture: {
+  company_name: {
+    type: String
+  },
+  logo: {
+    type: String
+  },
+  agency_name: {
+    type: String
+  },
+  address:{
+    type: String
+  },
+  website:{
     type: String
   },
   slug: {
