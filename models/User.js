@@ -23,7 +23,7 @@ const userSchema = new Schema({
     lowercase: true,
     trim: true,
     required: "Please enter a valid email address"
-  }
+  },
   firstname: {
     type: String,
     required: "Please a enter your first name",

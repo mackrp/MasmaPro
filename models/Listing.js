@@ -19,7 +19,7 @@ const listingSchema = new Schema({
     trim: true,
     require: "Please enter some description for your listing"
   },
-  pictures: [String],
+  pic: [String],
   slug: String,
   property_type: [String],
   bedrooms: String,
@@ -33,7 +33,7 @@ const listingSchema = new Schema({
 
   property_features: [String],
   lot_features: [String],
-  community_features: [String]
+  community_features: [String],
 
   location: {
     type: {
@@ -85,8 +85,8 @@ listingSchema.pre('save', async function(next){
   next();
 });
 
-listingSchema.pre('find', autopopulate);
-listingSchema.pre('findOne', autopopulate);
+// listingSchema.pre('find', autopopulate);
+// listingSchema.pre('findOne', autopopulate);
 
 
 
