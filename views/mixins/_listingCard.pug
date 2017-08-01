@@ -1,0 +1,24 @@
+mixin listingCard(listing = {})
+  .listing
+    .listing__hero
+      .listing__actions
+        if user
+          .listing__action.listing__action--heart
+            form.favorite(method="POST" action=`/api/listings/${listing.id}/favorite`)
+              - const favoriteStrings = user.favorites.map(obj => obj.toString())
+              - const favoriteClass = favoriteStrings.includes(listing._id.toString()) ? 'favorite__button--favorited' : ''
+              button.favorite__button(type="submit" name="favorite" class=favoriteClass)
+                != h.icon('heart')
+        if user && listing.author.equals(user._id)
+          .listing__action.listing__action--edit
+            a(href=`/listings/${listing._id}/edit`)
+              != h.icon('pencil')
+        if listing.reviews
+          .listing__action.listing__action--count
+            != h.icon('review')
+            span= listing.reviews.length
+      img(src=`/uploads/${listing.pic || 'listing.png'}`)
+      h2.title
+        a(href=`/listing/${listing.slug}`) #{listing.title}
+    .listing__details
+      p= listing.description.split('').slice(0, 25).join('')

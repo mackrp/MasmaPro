@@ -1,0 +1,151 @@
+mixin listingForm(listing = {})
+  .container
+    //- .container-top
+    //-   //- .themes
+    //-   //-   span(data-value="default" class="selectedx" style="background:#2096cd;")
+    //-   //-     <span data-value="purple" style="background:#795aac;"></span>
+    //-   //-     <span data-value="red" style="background:#f44a56;"></span>
+    //-   //-     <span data-value="green" style="background:#27ae60;"></span>
+    //-   //-     <span data-value="turquoise" style="background:#1fb5ad;"></span>
+    //-   //- </div>
+    //-   //-     <div class="themes">
+    //-   //-       <a class="activex" href="index.html">Example 1</a>
+    //-   //-         <a href="index2.html">Example 2</a>
+    //-   //-         <a href="index3.html">Example 3</a>
+    //-   //-         <a href="index4.html">Example 4</a>
+    //-   //-     </div>
+    //-   //- </div>
+    .stepsForm
+      form(action=`/add/${listing._id || ''}` method="POST" enctype="multipart/form-data" name="basicform")
+        .sf-steps
+          .sf-steps-content
+            div #[span 1] Details 
+            div #[span 2] Address 
+            div #[span 3] Property Type 
+            div #[span 4] Features 
+            div #[span 5] Pictures 
+            
+        .sf-steps-form.sf-radius
+          ul.sf-content
+            li
+              .sf_columns.column_6
+                - const listingCategories = ["For Sale", "For Rent"]
+                - const listingTypes = listing.listingTypes || []
+                .text-center
+                  ul.text-center.types
+                    each category in listingCategories
+                      .type.type__choice
+                        input(type="radio" value="category" name="listingTypes" data-required="true" checked=(listingTypes.includes(category)))
+                        label(for="category" data-required="true") #{category}        
+                label(for="title") Title
+                input(type="text" id="title" name="title" class="text_field" value=listing.title data-required="true")
+                label(for="description" class="textarea" data-required="true") Description
+                textarea(name="description" id="description")=listing.description
+          
+          ul.sf-content
+            li
+              .sf_columns.column_6
+                - const stateNames = ["Abuja FCT", "Abia", "Adamawa","Akwa Ibom", "Anambra", "Bayelsa", "Bauchi", "Benue", "Borno", "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu", "Gombe", "Imo", "Jigawa", "Kaduna", "Kano", "Kastina", "Kebbi", "Kogi", "Kwara", "Lagos", "Nasarawa", "Niger", "Ogun", "Ondo", "Osun", "Oyo", "Plateau", "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara"]
+                - const states = listing.states || []
+                ul.types
+                  label.sf-select(for="state") State
+                  select(name="states" data-required="true")
+                    option(value="") Select State
+                    each state in stateNames
+                      .types.types__choice
+                        option(value=state id="state" name="states" data-required="true" selected=(states.includes(state))) #{state}
+                label(for="address") Address
+                input(type="text" id="address" name="location[address]" data-required="true" value=(listing.location && listing.location.address))
+                label(for="lng") Address Lng
+                input(type="text" id="lng" name="location[coordinates][0]" value=(listing.location && listing.location.coordinates[0]) required)
+                label(for="lat") Address Lng
+                input(type="text" id="lat" name="location[coordinates][1]" value=(listing.location && listing.location.coordinates[1]) required)
+          
+          ul.sf-content
+            li
+              .sf_columns.column_6
+                h4.text-center Property Types
+                - const types = ["Flats and Apartments", "Block of Flats", "Bungalow", "Duplexes", "Mini-Flat", "Penthouse", "Commercial", "Town Houses", "Terraces", "Estate", "Offices", "Shops", "Farms", "Lands", "Hotels", "Multi-Family Home", "Single-Family Home", "Luxury Serviced Apartments", "Industrial/Warehouses"]
+                - const propertyTypes = listing.propertyTypes || []
+                ul.types
+                  each type in types
+                    .type.type__choice
+                      input(type="checkbox" id=type value=type name="propertyTypes" checked=(propertyTypes.includes(type)))
+                      label(for=type) #{type}
+                label(for="bedrooms") Bedrooms
+                input(type="number" name="bedrooms" value=listing.bedrooms)
+                label(for="bathrooms") Bathrooms
+                input(type="number" name="bathrooms" value=listing.bathrooms)
+                label(for="year") Year Built
+                input(type="text" name="year" value=listing.year)
+                - const forSale = "For Sale"
+                if listing.listingType == forSale
+                  label(for="price") Price
+                  input(type="text" name="price" value=listing.price)
+                - const forRent = "For Rent"
+                if listing.listingType == forRent
+                  label(for="rent") Rent
+                  input(type="text" name="rent" value=listing.rent)
+                  - const options = ["Monthly", 'Annually']
+                  - const rentOptions = listing.rentOptions || []
+                  ul.types 
+                    select(name="myselection")
+                      each option in options
+                        .types.types__choice
+                          option(value="#{option}") #{option}
+                label(for="numberOfFloors") Number of Floors
+                input(type="text" name="numberOfFloors" value=listing.numberOfFloors)
+                label(for="garageSize") Garage Size
+                input(type="text" name="garageSize" value=listing.garageSize)  
+                  
+          ul.sf-content
+            li
+              .sf_columns.column_6
+                h4.text-center Property Features    
+                - const features = ["Basement", "Central Air", "Ginning Room", "Disability Features", "Laundry Room", "Fireplace", "Main Floor Bathroom", "Main Floor Bedroom", "Spa/Hot Tub", "Swimming Pool", "Family Room"]
+                - const propertyFeatures = listing.propertyFeatures || []
+                ul.types 
+                  each f in features
+                    .type.type__choice
+                      input(type="checkbox" id=f value=f name="propertyFeatures" checked=(propertyFeatures.includes(f)))
+                      label(for=f) #{f}
+                h4.text-center Lot Features 
+                input(type="text" name="lotSize" value=listing.lotSize class="lotsize" placeholder="Lot size")
+                - const lots = ["Corner Lot", "Golf Course Lot", "Waterfront", "City Lights View", "Mountain View", "River View", "Ocean View", "Water View"]
+                - const lotFeatures = listing.lotFeatures || []
+                ul.types 
+                  each lot in lots
+                    .type.type__choice
+                      input(type="checkbox" id=lot value=lot name="lotFeatures" checked=(lotFeatures.includes(lot)))
+                      label(for=lot) #{lot}
+                h4.text-center Community Features 
+                - const communities = ["Fitness Center", "Golf", "Recreation Facilities", "Security Features", "Senior Community", "Long Tennis"]
+                - const communityFeatures = listing.communityFeatures || []
+                ul.types 
+                  each community in communities
+                    .type.type__choice
+                      input(type="checkbox" id=community value=community name="communityFeatures" checked=(communityFeatures.includes(community)))
+                      label(for=community) #{community}
+        
+          ul.sf-content
+            li
+              .sf_columns.column_6
+                h4.text-center Upload Pictures 
+                label(for="pic") Picture
+                input(type="file" name="pic" id="pic" accept="image/gif", "image/jpeg", "image/png")
+                if(listing.pic)
+                  img(src=`/uploads/${listing.pic}`, alt=listing.title width=200)
+            .sf-steps-navigation.sf-align-right
+              input(type="submit" value="Add Listing ->" class="sf-button pull-right")
+
+                      
+      .sf-steps-navigation.sf-align-right
+        span#sf-msg.sf-msg-error
+        button#sf-prev(type="button" class="sf-button pull-left" "width:100%") Previous
+        button#sf-next(type="button" class="sf-button") Save and Continue
+                  
+            
+                  
+  //- script(src="/javascripts/inner.js")
+  	
+      

@@ -1,0 +1,298 @@
+mixin listingForm(listing = {})
+  form#basicform(action=`/add/${listing._id || ''}` method="POST" class="card" enctype="multipart/form-data" name="basicform")
+    #sf1.frm
+      fieldset
+        legend Step 1 of 4  
+        h4.text-center Headline
+        - const listingCategories = ["For Sale", "For Rent"]
+        - const listingTypes = listing.listingTypes || []
+        .text-center
+          ul.text-center.types
+            each category in listingCategories
+              .type.type__choice
+                input.text-center(type="radio" id="category" value=category name="listingTypes" checked=(listingTypes.includes(category)))
+                label(for="category") #{category}        
+        label(for="title") Title
+        input(type="text" id="title" name="title" class="text_field" value=listing.title data-required="true")
+        label(for="description" class="textarea" data-required="true") Description
+        textarea(name="description" id="description")=listing.description
+        .clearfix(style="height: 10px;clear: both;")
+        .form-group
+          .col-lg-10.col-lg-offset-2
+            button(class="btn btn-primary open1" type="button") Next 
+              //- span.fa.fa-arrow-right
+
+    #sf2.frm(style="display:none;")
+      fieldset
+        legend Step 2 of 4
+        h4.text-center Details
+        h4 Property Types
+        - const types = ["Flats and Apartments", "Block of Flats", "Bungalow", "Duplexes", "Mini-Flat", "Penthouse", "Commercial", "Town Houses", "Terraces", "Estate", "Offices", "Shops", "Farms", "Lands", "Hotels", "Multi-Family Home", "Single-Family Home", "Luxury Serviced Apartments", "Industrial/Warehouses"]
+        - const propertyTypes = listing.propertyTypes || []
+        ul.types
+          each type in types
+            .type.type__choice
+              input(type="checkbox" id=type value=type name="propertyTypes" checked=(propertyTypes.includes(type)))
+              label(for=type) #{type}
+        label(for="bedrooms") Bedrooms
+        input(type="number" name="bedrooms" value=listing.bedrooms)
+        label(for="bathrooms") Bathrooms
+        input(type="number" name="bathrooms" value=listing.bathrooms)
+        label(for="year") Year Built
+        input(type="text" name="year" value=listing.year)
+        - const forSale = "For Sale"
+        if listing.listingType == forSale
+          label(for="price") Price
+          input(type="text" name="price" value=listing.price)
+        - const forRent = "For Rent"
+        if listing.listingType == forRent
+          label(for="rent") Rent
+          input(type="text" name="rent" value=listing.rent)
+          - const options = ["Monthly", 'Annually']
+          - const rentOptions = listing.rentOptions || []
+          ul.types 
+            select(name="myselection")
+              each option in options
+                .types.types__choice
+                  option(value="#{option}") #{option}
+        label(for="numberOfFloors") Number of Floors
+        input(type="text" name="numberOfFloors" value=listing.numberOfFloors)
+        label(for="garageSize") Garage Size
+        input(type="text" name="garageSize" value=listing.garageSize)  
+        - const stateNames = ["Abuja FCT", "Abia", "Adamawa","Akwa Ibom", "Anambra", "Bayelsa", "Bauchi", "Benue", "Borno", "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu", "Gombe", "Imo", "Jigawa", "Kaduna", "Kano", "Kastina", "Kebbi", "Kogi", "Kwara", "Lagos", "Nasarawa", "Niger", "Ogun", "Ondo", "Osun", "Oyo", "Plateau", "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara"]
+        - const states = listing.states || []
+        ul.types
+          label(for="state")
+          select(name="states")
+            option(value="") Select State
+            each state in stateNames
+              .types.types__choice
+                option(value="state" id="state" name="states" selected=(states.includes(state)) validators: {required: true }) #{state}
+        label(for="address") Address
+        input(type="text" id="address" name="location[address]" value=(listing.location && listing.location.address))
+        label(for="lng") Address Lng
+        input(type="text" id="lng" name="location[coordinates][0]" value=(listing.location && listing.location.coordinates[0]) required)
+        label(for="lat") Address Lng
+        input(type="text" id="lat" name="location[coordinates][1]" value=(listing.location && listing.location.coordinates[1]) required)
+        .clearfix(style="height: 10px;clear: both;")
+        .clearfix(style="height: 10px;clear: both;")
+        .form-group
+          .col-lg-10.col-lg-offset-2
+            button(class="btn btn-warning back2" type="button") 
+              span.fa.fa-arrow-right Back
+            button(class="btn btn-primary open2" type="button") Next 
+              //- span.fa.fa-arrow-right
+                
+    #sf3.frm(style="display:none;")
+      fieldset
+        legend Step 3 of 4
+        h4.text-center Features  
+        h4.text-center Property Features    
+        - const features = ["Basement", "Central Air", "Ginning Room", "Disability Features", "Laundry Room", "Fireplace", "Main Floor Bathroom", "Main Floor Bedroom", "Spa/Hot Tub", "Swimming Pool", "Family Room"]
+        - const propertyFeatures = listing.propertyFeatures || []
+        ul.types 
+          each f in features
+            .type.type__choice
+              input(type="checkbox" id=f value=f name="propertyFeatures" checked=(propertyFeatures.includes(f)))
+              label(for=f) #{f}
+        h4.text-center Lot Features 
+        input(type="text" name="lotSize" value=listing.lotSize class="lotsize" placeholder="Lot size")
+        - const lots = ["Corner Lot", "Golf Course Lot", "Waterfront", "City Lights View", "Mountain View", "River View", "Ocean View", "Water View"]
+        - const lotFeatures = listing.lotFeatures || []
+        ul.types 
+          each lot in lots
+            .type.type__choice
+              input(type="checkbox" id=lot value=lot name="lotFeatures" checked=(lotFeatures.includes(lot)))
+              label(for=lot) #{lot}
+        h4.text-center Community Features 
+        - const communities = ["Fitness Center", "Golf", "Recreation Facilities", "Security Features", "Senior Community", "Long Tennis"]
+        - const communityFeatures = listing.communityFeatures || []
+        ul.types 
+          each community in communities
+            .type.type__choice
+              input(type="checkbox" id=community value=community name="communityFeatures" checked=(communityFeatures.includes(community)))
+              label(for=community) #{community}
+        .clearfix(style="height: 10px;clear: both;")
+        .form-group
+          .col-lg-10.col-lg-offset-2
+            button(class="btn btn-warning back3" type="button") 
+              span.fa.fa-arrow-right Back
+            button(class="btn btn-primary open3" type="button") Next 
+              span.fa.fa-arrow-right
+    
+    #sf4.frm(style="display:none;")
+      fieldset
+        legend Step 4 of 4
+        h4.text-center Upload Pictures 
+        label(for="pic") Picture
+          input(type="file" name="pic" id="pic" accept="image/gif", "image/jpeg", "image/png")
+          if(listing.pic)
+            img(src=`/uploads/${listing.pic}`, alt=listing.title width=200)
+        .clearfix(style="height: 10px;clear: both;")
+        .form-group
+          .col-lg-10.col-lg-offset-2
+            button(class="btn btn-warning back4" type="button") Back
+              span.fa.fa-arrow-right
+            input(type="submit" value="Save ->" class="button")  
+          //- input(type="submit" value="Save ->" class="btn btn-primary")
+
+  //- script(src="/javascripts/jquery.validate.js")
+  //- script(src="/javascripts/multiForm.js")
+          
+    //- h4 Summary
+    //- 
+    //- // form one
+    //- fieldset#first
+    //-   h4.text-center Headline
+    //-   - const listingCategories = ["For Sale", "For Rent"]
+    //-   - const listingTypes = listing.listingTypes || []
+    //-   .text-center
+    //-     ul.text-center.types
+    //-       each category in listingCategories
+    //-         .type.type__choice
+    //-           input.text-center(type="radio" id=category value=category name="listingTypes" checked=(listingTypes.includes(category)))
+    //-           label(for=category) #{category}        
+    //-   label(for="title") Title
+    //-   input(type="text" name="title" class="text_field" value=listing.title required)
+    //-   label(for="description" class="textarea" required) Description
+    //-   textarea(name="description")=listing.description
+    //-   input#next_btn1(onclick="next_step1()" type="button" value="Next")
+    //-     
+    //- // form two
+    //- fieldset#second
+    //-   h4.text-center Details
+    //-   h4 Property Types
+    //-   - const types = ["Flats and Apartments", "Block of Flats", "Bungalow", "Duplexes", "Mini-Flat", "Penthouse", "Commercial", "Town Houses", "Terraces", "Estate", "Offices", "Shops", "Farms", "Lands", "Hotels", "Multi-Family Home", "Single-Family Home", "Luxury Serviced Apartments", "Industrial/Warehouses"]
+    //-   - const propertyTypes = listing.propertyTypes || []
+    //-   ul.types
+    //-     each type in types
+    //-       .type.type__choice
+    //-         input(type="checkbox" id=type value=type name="propertyTypes" checked=(propertyTypes.includes(type)))
+    //-         label(for=type) #{type}
+    //-   label(for="bedrooms") Bedrooms
+    //-   input(type="number" name="bedrooms" value=listing.bedrooms)
+    //-   label(for="bathrooms") Bathrooms
+    //-   input(type="number" name="bathrooms" value=listing.bathrooms)
+    //-   label(for="year") Year Built
+    //-   input(type="text" name="year" value=listing.year)
+    //-   - const forSale = "For Sale"
+    //-   if listing.listingType == forSale
+    //-     label(for="price") Price
+    //-     input(type="text" name="price" value=listing.price)
+    //-   - const forRent = "For Rent"
+    //-   if listing.listingType == forRent
+    //-     label(for="rent") Rent
+    //-     input(type="text" name="rent" value=listing.rent)
+    //-     - const options = ["Monthly", 'Annually']
+    //-     - const rentOptions = listing.rentOptions || []
+    //-     ul.types 
+    //-       select
+    //-         each option in options
+    //-           .types.types__choice
+    //-             option(value=option) #{option}
+    //-   label(for="numberOfFloors") Number of Floors
+    //-   input(type="text" name="numberOfFloors" value=listing.numberOfFloors)
+    //-   label(for="garageSize") Garage Size
+    //-   input(type="text" name="garageSize" value=listing.garageSize)  
+    //-   - const stateNames = ["Abuja FCT", "Abia", "Adamawa","Akwa Ibom", "Anambra", "Bayelsa", "Bauchi", "Benue", "Borno", "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu", "Gombe", "Imo", "Jigawa", "Kaduna", "Kano", "Kastina", "Kebbi", "Kogi", "Kwara", "Lagos", "Nasarawa", "Niger", "Ogun", "Ondo", "Osun", "Oyo", "Plateau", "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara"]
+    //-   - const states = listing.states || []
+    //-   ul.types
+    //-     label(for="state") Select 
+    //-       select
+    //-         option(value="state") Select State
+    //-         each state in stateNames
+    //-           .types.types__choice
+    //-             option(value=state checked=(states.includes(state))) #{state}
+    //-   label(for="address") Address
+    //-   input(type="text" id="address" name="location[address]" value=(listing.location && listing.location.address))
+    //-   label(for="lng") Address Lng
+    //-   input(type="text" id="lng" name="location[coordinates][0]" value=(listing.location && listing.location.coordinates[0]) required)
+    //-   label(for="lat") Address Lng
+    //-   input(type="text" id="lat" name="location[coordinates][1]" value=(listing.location && listing.location.coordinates[1]) required)
+    //-   input#pre_btn1(onclick="prev_step1()" type="button" value="Previous")
+    //-   input#next_btn2(name="next" onclick="next_step2()" type="button" value="Next")
+    //-   
+    //-   // form three  
+    //- fieldset#third
+    //-   h4.text-center Features  
+    //-   h4.text-center Property Features    
+    //-   - const features = ["Basement", "Central Air", "Ginning Room", "Disability Features", "Laundry Room", "Fireplace", "Main Floor Bathroom", "Main Floor Bedroom", "Spa/Hot Tub", "Swimming Pool", "Family Room"]
+    //-   - const propertyFeatures = listing.propertyFeatures || []
+    //-   ul.types 
+    //-     each f in features
+    //-       .type.type__choice
+    //-         input(type="checkbox" id=f value=f name="propertyFeatures" checked=(propertyFeatures.includes(f)))
+    //-         label(for=f) #{f}
+    //-   h4.text-center Lot Features 
+    //-   input(type="text" name="lotSize" value=listing.lotSize class="lotsize" placeholder="Lot size")
+    //-   - const lots = ["Corner Lot", "Golf Course Lot", "Waterfront", "City Lights View", "Mountain View", "River View", "Ocean View", "Water View"]
+    //-   - const lotFeatures = listing.lotFeatures || []
+    //-   ul.types 
+    //-     each lot in lots
+    //-       .type.type__choice
+    //-         input(type="checkbox" id=lot value=lot name="lotFeatures" checked=(lotFeatures.includes(lot)))
+    //-         label(for=lot) #{lot}
+    //-   h4.text-center Community Features 
+    //-   - const communities = ["Fitness Center", "Golf", "Recreation Facilities", "Security Features", "Senior Community", "Long Tennis"]
+    //-   - const communityFeatures = listing.communityFeatures || []
+    //-   ul.types 
+    //-     each community in communities
+    //-       .type.type__choice
+    //-         input(type="checkbox" id=community value=community name="communityFeatures" checked=(communityFeatures.includes(community)))
+    //-         label(for=community) #{community}
+    //-   input#pre_btn2(onclick="prev_step2()" type="button" value="Previous")
+    //-   input#next_btn3(name="next" onclick="next_step3()" type="button" value="Next")
+    //- 
+    //-           
+    //- fieldset#fourth
+    //-   h4.text-center Upload Pictures 
+    //-   label(for="pic") Picture
+    //-     input(type="file" name="pic" id="pic" accept="image/gif", "image/jpeg", "image/png")
+    //-     if(listing.pic)
+    //-       img(src=`/uploads/${listing.pic}`, alt=listing.title width=200)
+    //-   input#pre_btn3(onclick="prev_step3()" type="button" value="Previous")
+    //-   input(type="submit" value="Save ->" class="button")
+    //-   
+    //-   
+    //-   
+    //- script
+    //-   $(function () {
+    //-     var $sections = $('.form-section');
+    //- 
+    //-     function navigateTo(index) {
+    //-       // Mark the current section with the class 'current'
+    //-       $sections
+    //-         .removeClass('current')
+    //-         .eq(index)
+    //-           .addClass('current');
+    //-       // Show only the navigation buttons that make sense for the current section:
+    //-       $('.form-navigation .previous').toggle(index > 0);
+    //-       var atTheEnd = index >= $sections.length - 1;
+    //-       $('.form-navigation .next').toggle(!atTheEnd);
+    //-       $('.form-navigation [type=submit]').toggle(atTheEnd);
+    //-     }
+    //- 
+    //-     function curIndex() {
+    //-       // Return the current index by looking at which section has the class 'current'
+    //-       return $sections.index($sections.filter('.current'));
+    //-     }
+    //- 
+    //-     // Previous button is easy, just go back
+    //-     $('.form-navigation .previous').click(function() {
+    //-       navigateTo(curIndex() - 1);
+    //-     });
+    //- 
+    //-     // Next button goes forward iff current block validates
+    //-     $('.form-navigation .next').click(function() {
+    //-       if ($('.demo-form').parsley().validate({group: 'block-' + curIndex()}))
+    //-         navigateTo(curIndex() + 1);
+    //-     });
+    //- 
+    //-     // Prepare sections by setting the `data-parsley-group` attribute to 'block-0', 'block-1', etc.
+    //-     $sections.each(function(index, section) {
+    //-       $(section).find(':input').attr('data-parsley-group', 'block-' + index);
+    //-     });
+    //-     navigateTo(0); // Start at the beginning
+    //-   });
+    //-   
+    //- 

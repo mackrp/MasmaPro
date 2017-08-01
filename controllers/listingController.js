@@ -21,8 +21,8 @@ exports.homePage = (req, res) => {
   res.render('index', {title: 'Hello World'});
 };
 
-exports.addListings = (req, res) => {
-  res.render('index');
+exports.addListing = (req, res) => {
+  res.render('editListing', {title: 'Add Listing'});
 };
 
 exports.upload = multer(multerOptions).single('pic');
@@ -65,4 +65,95 @@ exports.getListings  = async (req, res) => {
     return;
   }
   res.render('listings', {title: "Listings", listings, page, pages, count });
+};
+
+const confirmListingOwner = (listing, user) => {
+  if(!listing.author.equals(user._id)){
+    throw Error('Access Denied! You must be the owner to edit');
+  };
+};
+
+exports.editListing  = async (req, res) => {
+  const listing = await Listing.findOne({ _id: req.params.id });
+  confirmListingOwner(listing, req.user);
+  res.render('editListing', {title: `Edit ${listing.title}`, listing });
+};
+
+exports.updateListing = async (req, res) => {
+  // set the location data to be a Point
+  req.body.location.type = 'Point';
+  // Find and update listing
+  const listing = await Listing.findOneAndUpdate({ _id: req.params.id }, req.body, {
+    new: true,
+    runValidators: true
+  }).exec();
+  req.flash('success', `Successfully updated <strong>${listing.title}</strong>. <a href="/listing/${listing.slug}">View Listing -></a>`)
+  res.redirect(`/listings/${listing._id}/edit`);
+};
+
+exports.getListingBySlug = async (req, res, next ) => {
+  const listing = await Listing.findOne({slug: req.params.slug}).populate('author reviews');
+  if(!listing) return next();
+  res.render('listing', { listing, title: listing.title});
+};
+
+exports.getListingsByTag = async (req, res) => {
+  const tag = req.params.tag;
+  const tagQuery = tag || { $exists: true };
+  const tagsPromise = Listing.getTagsList();
+  const listingsPromise = Listing.find({ tags: tagQuery });
+  const [tags, listings] = await Promise.all([tagsPromise, listingsPromise])
+
+  res.render('tag', {tags, title: 'Tags', tag, listings });
+};
+
+exports.searchListings = async (req, res) => {
+  const listings = await Listing
+    .find({ $text: { $search: req.query.q }},{score: { $meta: 'textScore' }})
+    .sort({ score: { $meta: 'textScore' }})
+    .limit(6);
+    res.json(listings);
+};
+
+exports.listingsMap = async (req,res) => {
+  const coordinates = [req.query.lng, req.query.lat].map(parseFloat);
+  const q = {
+    location: {
+      $near: {
+        $geometry: {
+          type: 'Point',
+          coordinates
+        },
+        $maxDistance: 100000 // 10Km
+      }
+    }
+  }
+  const listings = await Listing.find(q).select('slug title description pic location').limit(20);
+  res.json(listings);
+};
+
+exports.listingsMapPage = (req, res) => {
+  res.render('map', {title: 'Map'});
+};
+
+exports.favoriteListing = async (req, res) => {
+  const favorites = req.user.favorites.map(obj => obj.toString());
+  const operator = favorites.includes(req.params.id) ? '$pull' : '$addToSet';
+  const user = await User.findByIdAndUpdate(req.user._id,
+    { [operator]: {favorites: req.params.id }},
+    {new: true}
+  );
+  res.json(user);
+};
+
+exports.getfavorites = async (req, res) => {
+  const listings = await Listing.find({
+    _id: { $in: req.user.favorites }
+  });
+  res.render('listings', { title: "Favorites", listings})
+};
+
+exports.getTopListings = async (req, res) => {
+  const listings = await Listing.getTopListings();
+  res.render('topListings', { listings, title: '⭐ Top Listings'});
 };

@@ -13,7 +13,7 @@ mongoose.connection.on('error', (err) => {
 // READY?! Let's go!
 require('./models/Listing');
 require('./models/User');
-// require('./models/Review');
+require('./models/Review');
 
 // Start our app!
 const app = require('./app');
