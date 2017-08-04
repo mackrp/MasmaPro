@@ -17,9 +17,9 @@ const multerOptions = {
   }
 };
 
-exports.homePage = (req, res) => {
-  res.render('index', {title: 'Hello World'});
-};
+// exports.homePage = (req, res) => {
+//   res.render('index', {title: 'Hello World'});
+// };
 
 exports.addListing = (req, res) => {
   res.render('editListing', {title: 'Add Listing'});
@@ -35,7 +35,7 @@ exports.resize = async (req, res, next) => {
   req.body.pic = `${uuid.v4()}.${extension}`;
   const pic = await jimp.read(req.file.buffer);
   await pic.resize(800, jimp.AUTO);
-  await pic.write(`.public/uploads/${req.body.pic}`);
+  await pic.write(`./public/uploads/${req.body.pic}`);
   next();
 };
 
@@ -67,6 +67,28 @@ exports.getListings  = async (req, res) => {
   res.render('listings', {title: "Listings", listings, page, pages, count });
 };
 
+exports.homePage  = async (req, res) => {
+  const page = req.params.page || 1;
+  const limit = 4;
+  const skip = (page * limit) - limit;
+  const listingsPromise = Listing
+    .find()
+    .skip(skip)
+    .limit(limit)
+    .sort({ created: 'desc'});
+
+  const countPromise = Listing.count();
+  const [listings, count] = await Promise.all([listingsPromise, countPromise]);
+  const pages = Math.ceil(count/limit);
+  if(!listings.length && skip){
+    req.flash('info', `Hey, the page ${page} you asked for doen't exist. So I redirect you to page ${pages}`);
+    res.redirect(`/listings/page/${pages}`);
+    return;
+  }
+  res.render('index', {title: "Listings", listings, page, pages, count });
+};
+
+
 const confirmListingOwner = (listing, user) => {
   if(!listing.author.equals(user._id)){
     throw Error('Access Denied! You must be the owner to edit');
@@ -88,7 +110,8 @@ exports.updateListing = async (req, res) => {
     runValidators: true
   }).exec();
   req.flash('success', `Successfully updated <strong>${listing.title}</strong>. <a href="/listing/${listing.slug}">View Listing -></a>`)
-  res.redirect(`/listings/${listing._id}/edit`);
+  // res.redirect(`/listings/${listing._id}/edit`);
+  res.redirect(`/listing/${listing.slug}`);
 };
 
 exports.getListingBySlug = async (req, res, next ) => {
@@ -97,14 +120,24 @@ exports.getListingBySlug = async (req, res, next ) => {
   res.render('listing', { listing, title: listing.title});
 };
 
-exports.getListingsByTag = async (req, res) => {
-  const tag = req.params.tag;
-  const tagQuery = tag || { $exists: true };
-  const tagsPromise = Listing.getTagsList();
-  const listingsPromise = Listing.find({ tags: tagQuery });
-  const [tags, listings] = await Promise.all([tagsPromise, listingsPromise])
+exports.getListingsByTypes = async (req, res) => {
+  const type = req.params.listingTypes;
+  const listingTypesQuery = type || { $exists: true };
+  const listingTypesPromise = Listing.getListingTypesList();
+  const listingsPromise = Listing.find({ listingTypes: listingTypesQuery });
+  const [listingTypes, listings] = await Promise.all([listingTypesPromise, listingsPromise])
 
-  res.render('tag', {tags, title: 'Tags', tag, listings });
+  res.render('home', {listingTypes, title: 'For Sale / For Rent', type, listings });
+};
+
+exports.getListingsByStates = async (req, res) => {
+  const state = req.params.states;
+  const statesQuery = state || { $exists: true };
+  const statesPromise = Listing.getListingStatesList();
+  const listingsPromise = Listing.find({ states: statesQuery });
+  const [states, listings] = await Promise.all([statesPromise, listingsPromise])
+
+  res.render('states', {states, title: 'States', state, listings });
 };
 
 exports.searchListings = async (req, res) => {

@@ -1,5 +1,20 @@
 extends layout
 
+include mixins/_listingCard
+include mixins/_pagination
+
 block content
+  .covermain
+    form(class="flex-form")
+      .nav__section.nav__section--search
+        .search
+          input.search__input(type="text" placeholder="Coffee, beer..." name="search")
+          .search__results
+      //- input(type="search" placeholder="Where do you want to go?")
+      //- input(type="submit" value="Search")
+
   .container
-    p Hello World 
+    h2= title
+    .listings
+      each listing in listings
+        +listingCard(listing)

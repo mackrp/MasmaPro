@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const listingSchema = new Schema({
   listingTypes:{
     type: [String],
+    trim: true,
     require: "Please Select Your Listing Type, For Rent or For Sale"
   },
 
@@ -90,10 +91,18 @@ listingSchema.pre('save', async function(next){
   next();
 });
 
-listingSchema.statics.getTagsList = function(){
+listingSchema.statics.getListingTypesList = function(){
   return this.aggregate([
-    { $unwind: '$tags' },
-    { $group: { _id: '$tags', count: { $sum: 1} }},
+    { $unwind: '$listingTypes' },
+    { $group: { _id: '$listingTypes', count: { $sum: 1} }},
+    { $sort: { count: -1 }}
+  ]);
+};
+
+listingSchema.statics.getListingStatesList = function(){
+  return this.aggregate([
+    { $unwind: '$states' },
+    { $group: { _id: '$states', count: { $sum: 1} }},
     { $sort: { count: -1 }}
   ]);
 };

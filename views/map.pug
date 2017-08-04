@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  .map
+    .autocomplete
+      input.autocomplete__input(type='text' placeholder="Search for Apartments nearby...." name="geolocate")
+    #map
+      p Loading Map...

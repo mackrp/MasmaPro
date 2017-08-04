@@ -1,0 +1,17 @@
+extends layout
+
+include mixins/_listingCard
+
+block content
+  .inner
+    //- h2 #{listingTypes || 'For sale'}
+    ul.types
+      each state in states
+        li.type
+          a.type__link(href=`/states/${state._id}` class=(state._id === state ? 'type__link--active' : ''))
+            span.type__text= state._id
+            span.type__count= state.count
+    .listings
+      each listing in listings
+        +listingCard(listing)
+    

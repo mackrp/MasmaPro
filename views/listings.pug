@@ -1,0 +1,12 @@
+extends layout
+
+include mixins/_listingCard
+include mixins/_pagination
+
+block content
+  .inner
+    h2= title
+    .listings
+      each listing in listings
+        +listingCard(listing)
+    +pagination(page, pages,count)

@@ -3,9 +3,9 @@ html {
 }
 
 body {
-  background: $purple;
-  background:white;
-  // background:#efefef;
+  // background: $purple;
+  // background:$grad;
+  background:#efefef;
   &:before {
     content: '';
     display: block;
@@ -14,39 +14,49 @@ body {
     width: 100%;
   }
 }
+
 .topHeader{
-  height: 50px;
   width: 100%;
-  background: white;
-  color: #77b800;
-  font-weight: bold;
-  align-items: center;
-  text-align: center;
-  padding: 10px;
-}
-nav{
-  min-height: 50px;
-  height: 100%;
+  background: #ffffff;
   border-bottom: 3px solid #efefef;
 }
+.topHeaderUp{
+  display: flex;
+  height: 40px;
+  width: 96%;
+  margin: auto;
+  // border-bottom: 1px solid #efefef;
+
+}
+.topnav{
+  text-shadow:4px 4px 0 rgba(0,0,0,0.1);
+}
+.topnav1{
+  font-size: 2rem;
+  padding-top: 4px;
+  flex:1 1 600px;
+}
+.topnav2{
+  flex:1 1 500px;
+}
+.navHeader{
+  width: 100%;
+  margin-left: 10px;
+}
+nav{
+  min-height: 40px;
+  // max-height: 100px;
+
+}
+.navbar-nav li.nav-item{
+  margin: 0 6px;
+  text-transform: uppercase;
+}
+
 .navbar{
-  padding-top: 5px;
-}
-nav__item .nav__link .nav-item.dropdown{
-  flex:2;
+  padding: 5px 0 0;
 }
 
-.navbar-toggler-icon {
-  width: 27px;
-  margin: 4px;
-  height: 23px;
-}
-
-.dropdown-item{
-  font-size: 14px;
-  color: #77b800;
-  padding: 10px 30px 5px 30px;
-}
 
 .inner {
   max-width:900px;

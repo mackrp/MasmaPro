@@ -1,0 +1,17 @@
+extends layout
+
+include mixins/_listingCard
+
+block content
+  .inner
+    //- h2 #{listingTypes || 'For sale'}
+    ul.types
+      each t in listingTypes
+        li.type
+          a.type__link(href=`/home/${t._id}` class=(t._id === type ? 'type__link--active' : ''))
+            span.type__text= t._id
+            span.type__count= t.count
+    .listings
+      each listing in listings
+        +listingCard(listing)
+    

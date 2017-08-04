@@ -1,20 +1,8 @@
 mixin listingForm(listing = {})
-  .container
-    //- .container-top
-    //-   //- .themes
-    //-   //-   span(data-value="default" class="selectedx" style="background:#2096cd;")
-    //-   //-     <span data-value="purple" style="background:#795aac;"></span>
-    //-   //-     <span data-value="red" style="background:#f44a56;"></span>
-    //-   //-     <span data-value="green" style="background:#27ae60;"></span>
-    //-   //-     <span data-value="turquoise" style="background:#1fb5ad;"></span>
-    //-   //- </div>
-    //-   //-     <div class="themes">
-    //-   //-       <a class="activex" href="index.html">Example 1</a>
-    //-   //-         <a href="index2.html">Example 2</a>
-    //-   //-         <a href="index3.html">Example 3</a>
-    //-   //-         <a href="index4.html">Example 4</a>
-    //-   //-     </div>
-    //-   //- </div>
+  .containerForm
+    .text-center
+      h2= title
+    br
     .stepsForm
       form(action=`/add/${listing._id || ''}` method="POST" enctype="multipart/form-data" name="basicform")
         .sf-steps
@@ -29,13 +17,13 @@ mixin listingForm(listing = {})
           ul.sf-content
             li
               .sf_columns.column_6
-                - const listingCategories = ["For Sale", "For Rent"]
+                - const listingCategories = ["ForSale", "ForRent"]
                 - const listingTypes = listing.listingTypes || []
                 .text-center
                   ul.text-center.types
                     each category in listingCategories
                       .type.type__choice
-                        input(type="radio" value="category" name="listingTypes" data-required="true" checked=(listingTypes.includes(category)))
+                        input(type="radio" value=category id=category name="listingTypes" data-required="true" checked=(listingTypes.includes(category)))
                         label(for="category" data-required="true") #{category}        
                 label(for="title") Title
                 input(type="text" id="title" name="title" class="text_field" value=listing.title data-required="true")

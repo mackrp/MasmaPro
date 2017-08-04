@@ -1,0 +1,32 @@
+extends layout
+
+include mixins/_reviewForm
+include mixins/_review
+
+block content
+  .single
+    .single__hero
+      img.single__image(src=`/uploads/${listing.pic || 'listing.png'}`)
+      h2.title.title--single
+        a(href=`/listing/${listing.slug}`) ##{listing.title}
+        
+  .single__details.inner
+    img.single__map(src=h.staticMap(listing.location.coordinates))
+    p.single__location= listing.location.address
+    p= listing.description
+    
+    if listing.listingTypes
+      ul.types
+        each type in listing.listingTypes
+          li.type
+            a.type__link(href=`/home/${listingTypes}`)
+              span.type__text ##{type}
+              
+    if(user)
+      +reviewForm(listing)
+      
+    if listing.reviews
+      .reviews
+        each review in listing.reviews
+          .review
+            +review(review)
